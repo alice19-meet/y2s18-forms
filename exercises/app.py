@@ -1,5 +1,5 @@
 from databases import *
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, redirect 
 app = Flask(__name__)
 
 @app.route('/')
@@ -15,7 +15,17 @@ def add_student_route():
     if request.method == 'GET':
         return render_template('add.html')
     else:
-        print('Received POST request!')
+        name = request.form['student_name']
+        year = request.form['student_year']
+        add_student(name, year, True)
         return render_template('add.html')
 
+@app.route('/delete/<int:student_id>', methods=["POST"])
+def delete_student_route(student_id):
+    if request.method=="POST":
+        delete_student_by_id(student_id)
+        return redirect(url_for("home"))
+        
+
 app.run(debug=True)
+   
